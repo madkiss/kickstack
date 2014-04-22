@@ -17,7 +17,8 @@ class kickstack::neutron::agent::l3 inherits kickstack {
     debug            => $::kickstack::debug,
     interface_driver => $::kickstack::neutron_plugin ? {
                           'ovs' => 'neutron.agent.linux.interface.OVSInterfaceDriver',
-                          'linuxbridge' => 'neutron.agent.linux.interface.BridgeInterfaceDriver'
+                          'linuxbridge' => 'neutron.agent.linux.interface.BridgeInterfaceDriver',
+                          'ml2' => 'neutron.agent.linux.interface.OVSInterfaceDriver'
                         },
     external_network_bridge => $::kickstack::neutron_external_bridge,
     use_namespaces   => $::kickstack::neutron_network_type ? {

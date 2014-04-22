@@ -8,7 +8,8 @@ class kickstack::neutron::config inherits kickstack {
 
   $core_plugin = "$::kickstack::neutron_plugin" ? {
     'ovs' => 'neutron.plugins.openvswitch.ovs_neutron_plugin.OVSNeutronPluginV2',
-    'linuxbridge'=> 'neutron.plugins.linuxbridge.lb_neutron_plugin.LinuxBridgePluginV2'
+    'linuxbridge' => 'neutron.plugins.linuxbridge.lb_neutron_plugin.LinuxBridgePluginV2',
+    'ml2' => 'neutron.plugins.ml2.plugin.Ml2Plugin'
   }
 
   case "$::kickstack::rpc" {
