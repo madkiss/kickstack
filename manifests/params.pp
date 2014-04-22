@@ -158,8 +158,18 @@ class kickstack::params {
 
   # The tenant network type to use with the Neutron ovs and linuxbridge plugins
   # Supported: gre (default), flat, vlan
-  $neutron_tenant_network_type = pick(getvar("::${variable_prefix}neutron_tenant_network_type"),
-                                      'gre')
+  # If the Neutron plugin in use is ML2, we need to return an array!
+  if $neutron_plugin == 'ml2' {
+    if getvar("::${variable_prefix}neutron_tenant_network_type") {
+      $local_neutron_tenant_network_type = getvar("::${variable_prefix}neutron_tenant_network_type")
+      $neutron_tenant_network_type = split($local_neutron_tenant_network_type,',')
+    } else {
+      $neutron_tenant_network_type = ['gre']
+    }
+  } else {
+    $neutron_tenant_network_type = pick(getvar("::${variable_prefix}neutron_tenant_network_type"),
+                                        'gre')
+  }
 
   # The Neutron physical network name to define (ignored if
   # tenant_network_type=='gre'
@@ -250,4 +260,25 @@ class kickstack::params {
   # Can be any combination of 'heat', 'cfn', and 'cloudwatch'
   # Default is just 'heat' (the native Heat API)
   $heat_apis = pick(getvar("::${variable_prefix}heat_apis"),'heat')
+
+  # The Neutron ML2 type drivers to be used. Default to "gre", so GRE networking
+  $neutron_ml2_type_drivers = pick(getvar("::${variable_prefix}neutron_ml2_type_drivers"),['gre'])
+
+  # The Neutron ML2 mechanism driver to be used. For now, use Open vSwitch
+  $neutron_ml2_mechanism_drivers = pick(getvar("::${variable_prefix}neutron_ml2_mechanism_drivers"),['openvswitch'])
+
+  # The Neutron ML2 supported flat networks. Default to "*"
+  $neutron_ml2_flat_networks = pick(getvar("::${variable_prefix}neutron_ml2_flat_networks"),['*'])
+
+  # The Neutron ML2 VXlan Multicast group. Use 224.0.0.1 as default value.
+  $neutron_ml2_vxlan_group = pick(getvar("::${variable_prefix}neutron_ml2_vxlan_group"),'224.0.0.1')
+
+  # The Neutron ML2 VNI ranges. Default to 10:100.
+  $neutron_ml2_vni_ranges = pick(getvar("::${variable_prefix}neutron_ml2_vni_ranges"),['10:100'])
+
+  # Whether or not to enable Security Group for Neutron ML2. Default: Yes.
+  $neutron_ml2_enable_security_group = pick(getvar("::${variable_prefix}neutron_ml2_enable_security_group"),true)
+
+  # Which ML2 Security Group driver to use. Default: OVS.
+  $neutron_ml2_firewall_driver = pick(getvar("::${variable_prefix}neutron_ml2_firewall_driver"),'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver')
 }

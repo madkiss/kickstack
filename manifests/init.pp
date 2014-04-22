@@ -62,6 +62,13 @@ class kickstack (
   $xenapi_connection_password = $kickstack::params::xenapi_connection_password,
   $horizon_allow_any_hostname = $kickstack::params::horizon_allow_any_hostname,
   $heat_apis = $kickstack::params::heat_apis,
+  $neutron_ml2_type_drivers = $kickstack::params::neutron_ml2_type_drivers,
+  $neutron_ml2_mechanism_drivers = $kickstack::params::neutron_ml2_mechanism_drivers,
+  $neutron_ml2_flat_networks = $kickstack::params::neutron_ml2_flat_networks,
+  $neutron_ml2_vxlan_group = $kickstack::params::neutron_ml2_vxlan_group,
+  $neutron_ml2_vni_ranges = $kickstack::params::neutron_ml2_vni_ranges,
+  $neutron_ml2_enable_security_group = $kickstack::params::neutron_ml2_enable_security_group,
+  $neutron_ml2_firewall_driver = $kickstack::params::neutron_ml2_firewall_driver
 ) inherits kickstack::params {
 
   include ::exportfact
